@@ -1,0 +1,66 @@
+*{
+    padding: 0;
+    margin: 0;
+    }
+
+    .area5{
+        width: auto;
+        height: 500px;
+        background-color: #FFFFFF;
+    }
+
+    .area5 p{
+        color: #052855;
+        position: relative;
+        bottom: -100px;
+        left: 800px;
+        text-align: left;
+    }
+
+    .area5 p.title{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 28px;
+        font-weight: bold
+    }
+
+    .area5 p.detailword{
+        bottom: -128px;
+    }   
+
+    .area5 ul.a li{
+        color: #052855;
+        position: relative;
+        font-size: 16px;
+        font-weight:500;
+        bottom: -150px;
+        font-family: Arial, Helvetica, sans-serif;
+        left: 825px;
+        margin-bottom: 5px;
+        word-wrap: break-word
+    }
+
+    .area5 ul.b li{
+        color: #052855;
+        position: relative;
+        font-size: 16px;
+        font-weight:500;
+        bottom: -45px;
+        font-family: Arial, Helvetica, sans-serif;
+        left: 1100px;
+        margin-bottom: 5px;
+        word-wrap: break-word
+    }
+
+    .area5 ul li::marker{
+        font-size: 28px;
+        color: #0061FF;
+        bottom: 50px;
+    }
+
+    .area5 p.linkword{
+        color: #0061FF;
+        font-weight: 500;
+        position: relative;
+        bottom: -70px;
+        text-decoration: underline;
+    }
