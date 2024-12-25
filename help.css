@@ -1,0 +1,19 @@
+.help {
+    height: 160px;
+    background-color: #F7F8F9;
+    text-align: center;
+    padding-top: 64px;
+    padding-bottom: 64px;
+    font-family: Arial, Helvetica, sans-serif
+}
+.help h2{
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 32px;
+    color: #052855;
+}
+.help p{
+    display: block;
+    color: #052855;
+}
