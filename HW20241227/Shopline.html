@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="content-3.css">
     <link rel="stylesheet" href="content-4.css">
     <link rel="stylesheet" href="content-5.css">
+    <link rel="stylesheet" href="more-info.css">
+    
 
     <style>
         *{
@@ -19,51 +21,53 @@
             margin: 0;
             list-style: none;
             font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .more-info{
+        }  
+        
+        .div-branch{
             display: flex;
             text-align: center;
-            flex-wrap: wrap;           
+            flex-wrap: wrap;
             padding-top: 40px;
             padding-bottom: 40px;
-            padding-left: 80px;
-            padding-right: 80px;            
-            background-color: #F7F8F9;
-            gap: 20px;
+            padding-left: 40px;
+            padding-right: 40px;
+            line-height: 1;
+            color: #052855;
         }
-        
-        .more-info h3{
+
+        .div-branch h3{
             width: 100%;
             margin-bottom: 14px;
             font-size: 175%;
             text-align: center;
-            font-weight: bold;
-            color: #052855;
+            font-weight: bold;           
         }
 
-        .more-info .div{
-            width: 30%;
-            margin: 60px 0px 0px 20px;
+        .div-branch img {
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .div-branch p{
             text-align: center;
+            width: 100%;
+            margin-bottom: 25px;
         }
 
-        .more-info h5{
-            line-height: 1.2;
-            margin-bottom: 16px;
-            font-size: 125%;
-            font-weight: bold;
-            color: #052855;
-        }
-        
-        .more-info img{
-            margin-bottom: 32px;
+        .div-branch .name-info p{
+            text-align: center;
+            line-height: 1.8;
+            font-size: 16px;            
+            width: 100%;           
         }
 
-        .more-info p{
-            color: #052855;
-            width: 400px;
-            height: 50px;  
+        .div-branch span{
+            text-align: center;
+            line-height: 1.5;
+            font-size: 14px;
+            font-weight: bold;            
+            width: 100%;
         }
 
     </style>
@@ -206,6 +210,12 @@
             <h5>品牌專屬成長社群</h5>
             <p>致力為品牌店家打造能深度交流且互助的生態體系，是拓展人脈、商機的絕佳場域。</p>
         </div>
+    </div>
+
+    <div class="div-branch">
+        <h3>人氣品牌一致推薦使用</h3>
+        <img src="branch.jpg" >
+        <p>“ 使用 SHOPLINE 像請了 24 小時的員工可以不停地接單，省去了本來需要人工紀錄的金流、物流作業，我們有更多的時間可以專心做出更好的產品。 ”<br><br><span>Roy ＆ Boyeong<br>淡果香 店長</span></p>                        
     </div>
 </body>
 </html>
