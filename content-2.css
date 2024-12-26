@@ -43,7 +43,7 @@
 }
 
 .left ul li::before{
-    content: "•";
+    content: "";
     display: block;
     width: 8px;
     height: 8px;
@@ -51,8 +51,7 @@
     background-color: #0061FF;
     position: absolute;
     left: 0;
-    top: 11px;            
-    overflow: hidden;
+    top: 11px;
 }
 
 .content-2 img{
