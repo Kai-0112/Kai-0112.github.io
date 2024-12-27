@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="content-4.css">
     <link rel="stylesheet" href="content-5.css">
     <link rel="stylesheet" href="more-info.css">
+    <link rel="stylesheet" href="div-branch.css">
     
 
     <style>
@@ -21,54 +22,47 @@
             margin: 0;
             list-style: none;
             font-family: Arial, Helvetica, sans-serif;
-        }  
+        }
         
-        .div-branch{
+        .footer-top{
+            background-color: #ebf1f8;
+            text-align: center;
             display: flex;
-            text-align: center;
-            flex-wrap: wrap;
-            padding-top: 40px;
-            padding-bottom: 40px;
-            padding-left: 40px;
-            padding-right: 40px;
-            line-height: 1;
+            flex-direction: column;
+            height: 200px;
+            padding-top: 64px;
+            padding-bottom: 32px;
+        }
+        
+        .footer-top h2{
+            font-size: 250%;
+            margin-bottom: 48px;
             color: #052855;
+            
         }
 
-        .div-branch h3{
-            width: 100%;
-            margin-bottom: 14px;
-            font-size: 175%;
-            text-align: center;
-            font-weight: bold;           
+        .footer-top .try-button {
+            margin: 24px auto 0;
+            font-weight: bold;
+            width: 160px;
         }
 
-        .div-branch img {
-            width: 100%;
-            padding-top: 10px;
-            padding-bottom: 10px;
+        .try-button{
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            height: 32px;
+            width: 160px;
         }
-
-        .div-branch p{
-            text-align: center;
-            width: 100%;
-            margin-bottom: 25px;
-        }
-
-        .div-branch .name-info p{
-            text-align: center;
-            line-height: 1.8;
-            font-size: 16px;            
-            width: 100%;           
-        }
-
-        .div-branch span{
-            text-align: center;
-            line-height: 1.5;
-            font-size: 14px;
-            font-weight: bold;            
-            width: 100%;
-        }
+        
 
     </style>
 </head>
@@ -216,6 +210,11 @@
         <h3>人氣品牌一致推薦使用</h3>
         <img src="branch.jpg" >
         <p>“ 使用 SHOPLINE 像請了 24 小時的員工可以不停地接單，省去了本來需要人工紀錄的金流、物流作業，我們有更多的時間可以專心做出更好的產品。 ”<br><br><span>Roy ＆ Boyeong<br>淡果香 店長</span></p>                        
+    </div>
+
+    <div class="footer-top">
+        <h2>全球超過 600,000 商家已使用 SHOPLINE 開店</h2>
+        <a href class="try-button">免費試用 14 天</a>
     </div>
 </body>
 </html>
