@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="content-5.css">
     <link rel="stylesheet" href="more-info.css">
     <link rel="stylesheet" href="div-branch.css">
+    <link rel="stylesheet" href="footer-top.css">
     
 
     <style>
@@ -24,44 +25,32 @@
             font-family: Arial, Helvetica, sans-serif;
         }
         
-        .footer-top{
-            background-color: #ebf1f8;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            height: 200px;
-            padding-top: 64px;
+        .footer-bottom{
+            background-color: #00142D;
+            padding-top: 32px;
             padding-bottom: 32px;
         }
-        
-        .footer-top h2{
-            font-size: 250%;
-            margin-bottom: 48px;
-            color: #052855;
-            
-        }
 
-        .footer-top .try-button {
-            margin: 24px auto 0;
-            font-weight: bold;
-            width: 160px;
-        }
-
-        .try-button{
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            font-weight: 500;
+        .footer-div1{
             display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-            height: 32px;
-            width: 160px;
+            text-align: left;
+            padding-bottom: 24px;
+            font-weight: 500;
+            padding-left: 50px;
+            border-bottom: 2px solid #ffffff50;
         }
+
+        .footer-div1 a{
+            text-decoration: none;
+            color: #fff;
+            margin-right: 20px
+        }
+
+        .a-padding{
+            padding-left: 20px;
+        }
+
+
         
 
     </style>
@@ -215,6 +204,13 @@
     <div class="footer-top">
         <h2>全球超過 600,000 商家已使用 SHOPLINE 開店</h2>
         <a href class="try-button">免費試用 14 天</a>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="footer-div1">
+            <a href>關於我們</a>
+            <a href class="a-padding">媒體專區</a>
+        </div>
     </div>
 </body>
 </html>
