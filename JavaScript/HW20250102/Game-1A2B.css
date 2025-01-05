@@ -1,0 +1,229 @@
+* {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .background{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background:linear-gradient(to bottom, #4C298D 0%,#261C50 80%, #1F2557 100%); /*background:linear-gradient 調整漸層的工具*/
+        width: 100%;
+        height: 100vh;
+    }
+
+    .box{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 0 30px 10px rgba(0, 0, 0, 0.3); /* box 陰影設計 */
+        border: 2px solid rgba(255, 255, 255, 0.5); /* 邊框設計 */
+        width: 615px;
+        height: 400px;
+        border-radius: 32px;
+        background: rgba(255, 255, 255, 0.2); /* 毛玻璃的半透明效果 */
+    }
+
+    h1{
+        font-weight: 600;
+        font-size: 300%;
+        margin: 16px;
+        color: #ffff;
+    }
+
+    .textBox{
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        width: 543px;
+        height: 60px;
+        background:linear-gradient(to bottom,#6E4685 0%,#6C4481 0%, #62387A 100%);
+        border-radius: 12px;
+        box-shadow: inset 0 8px 5px #5A396C;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+
+    .textBox input {
+        flex-grow: 1;
+        border: none;
+        border-radius: 8px;
+        height: 40px;
+        padding: 5px 10px; /* 調整內部文字間距 */
+        font-size: 1rem;
+        text-align: left; /* 文字靠左對齊 */
+        color: #fff;
+        background: transparent;
+        outline: none;
+        caret-color: #fff;
+    }
+
+    .textBox input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .textBox span{
+        font-size: 24px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 600;
+        color: #9F70B8;
+        padding-left: 16px;
+    }
+
+    .textBox .guessBtn{
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        align-items: center;
+        margin-left: auto;
+        border-radius: 0 12px 12px 0;
+        background: linear-gradient(to bottom, #4FD5BD 0%, #18B092 80%, #1C8F80 100%);
+        height: 60px;
+        width: 110px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        font-size: 24px;
+        font-weight: bold;
+        color: #ffff;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+    }
+
+    .textBox .guessBtn:disabled {
+        background: gray;
+        cursor: not-allowed;
+        opacity: 0.6; /* 增加半透明效果 */
+    }
+
+    .checkBtn:active, .startBtn:active, .clearBtn:active, .guessBtn:active {
+        transform: scale(0.95); /* 點擊縮放效果 */
+        box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* 內凹陰影，模擬按下效果 */
+    }
+
+    .displayBox{
+        display: flex;
+        flex-direction: column; /* 最新紀錄在上 */
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 543px;
+        height: 105px;
+        background:linear-gradient(to bottom,#6E4685 0%,#6C4481 0%, #62387A 100%);
+        border-radius: 12px;
+        box-shadow: inset 0 8px 5px #5A396C;
+        margin: 16px 16px 4px; /* 增加上下左右外邊距 */
+        padding-left: 16px;
+        padding-bottom: 60px;
+        
+        overflow-y: scroll; /* 啟用垂直滾動條 */
+        overflow-x: hidden; /* 隱藏水平滾動條 */
+    }
+
+    /* 滾動條樣式 */
+    .displayBox::-webkit-scrollbar {
+        width: 16px;
+    }
+
+    .displayBox::-webkit-scrollbar-thumb { /*在 .displayBox 中，自定義了滾動條樣，scrollbarThumb 會引用這個樣式的顯示條。*/
+        background: linear-gradient(to bottom, #C0A4D8, #A47EBF); /* 漸變顏色 */
+        border-radius: 10px; /* 圓角 */
+        border: 3px solid #EEE5F3; /* 邊框與軌道分離 */
+    }
+
+    .displayBox::-webkit-scrollbar-track {
+        background: #EEE5F3; /* 軌道背景顏色 */
+        border-radius: 10px; /* 軌道圓角 */
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* 微弱陰影 */
+    }
+
+    /* 歷史記錄樣式 */  
+    .displayBox div {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 8px; /* 控制資料間的垂直距離 */
+        padding: 2px 5px; /* 增加內部間距 */
+        color: #ffffff;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+    .displayBox div:first-child {
+        margin-top: 10px; /* 與上邊框之間的距離 */
+    }
+
+    /* 星星符號樣式 */
+    .displayBox .star {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+    }
+
+    .containerBtn{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        padding-top: 8px;
+        padding-bottom: 16px;
+    }
+
+    /* 按鈕圖示樣式 */
+    .containerBtn button img {
+        width: 40px; /* 圖示寬度 */
+        height: 40px; /* 圖示高度 */            
+    }            
+
+    .checkBtn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 8px;
+        margin-left: 32px;
+        border-radius: 16px;
+        background: linear-gradient(to bottom, #FDA84A 0%, #EE6D3A 80%, #C65130 100%);
+        height: 75px;
+        width: 180px;
+        border: 2px solid rgba(255, 255, 255, 0.5);       
+        font-size: 32px;
+        font-weight: bold;
+        color: #ffff;
+    }
+
+    .startBtn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 8px;
+        margin-left: 8px;
+        border-radius: 16px;
+        background: linear-gradient(to bottom, #4FD5BD 0%, #18B092 80%, #1C8F80 100%);
+        height: 75px;
+        width: 180px;
+        border: 2px solid rgba(255, 255, 255, 0.5);        
+        font-size: 32px;
+        font-weight: bold;
+        color: #ffff;
+    }
+
+    .clearBtn{
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        align-items: center;
+        margin-top: 8px;
+        margin-left: 8px;
+        border-radius: 16px;
+        background: linear-gradient(to bottom, #39D2F6 0%, #0191B4 80%, #0E89A3 100%);
+        height: 60px;
+        width: 60px;
+        border: 2px solid rgba(255, 255, 255, 0.5);        
+        font-size: 32px;
+        font-weight: bold;
+        color: #ffff;
+    }
+
+    /* 按鈕的禁用樣式 */
+    .checkBtn:disabled, .startBtn:disabled, .clearBtn:disabled {
+        background: gray;
+        opacity: 0.6; /* 增加半透明效果 */
+    }
