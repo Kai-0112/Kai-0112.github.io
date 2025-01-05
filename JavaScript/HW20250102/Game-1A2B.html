@@ -84,7 +84,7 @@
         checkBtn.addEventListener('click',() => {
             alert(`正確答案是:${answer}`);
         });
-        
+
         //------------------------------------------------------
 
         //E.猜數字
@@ -179,12 +179,6 @@
             const scrollbarThumb = document.querySelector('.displayBox::-webkit-scrollbar-thumb');
             // document.querySelector : 用來選擇 CSS 樣式為 .displayBox::-webkit-scrollbar-thumb 的 DOM 元素。
             //::-webkit-scrollbar-thumb 是一種伺服於滾動條樣式的 CSS 偽元素，表示滾動條內的顯示條（Thumb）。
-
-            if (scrollbarThumb) { //如果 scrollbarThumb 不存在（像是瀏覽器不支援 ::-webkit-scrollbar-thumb），這段邏輯會跳過，避免執行報錯。
-                const thumbHeight = Math.max(30); 
-                // 動態計算顯示條的高度，根據歷史記錄的數量 (totalRecords)。
-                // 計算公式: 100 - totalRecords * 5：每新增一筆記錄，顯示條的高度會減少 5px。
-            }
         }
 
         //------------------------------------------------------
