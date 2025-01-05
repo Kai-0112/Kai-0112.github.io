@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .background{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:linear-gradient(to bottom, #4C298D 0%,#261C50 80%, #1F2557 100%); /*background:linear-gradient 調整漸層的工具*/
+            width: 100%;
+            height: 100vh;
+        }
+
+        .box{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0 30px 10px rgba(0, 0, 0, 0.3); /* box 陰影設計 */
+            border: 2px solid rgba(255, 255, 255, 0.5); /* 邊框設計 */
+            width: 615px;
+            height: 400px;
+            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.2); /* 毛玻璃的半透明效果 */
+        }
+
+        h1{
+            font-weight: 600;
+            font-size: 300%;
+            margin: 16px;
+            color: #ffff;
+        }
+
+        .textBox{
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            width: 543px;
+            height: 60px;
+            background:linear-gradient(to bottom,#6E4685 0%,#6C4481 0%, #62387A 100%);
+            border-radius: 12px;
+            box-shadow: inset 0 8px 5px #5A396C;
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+        .textBox input {
+            flex-grow: 1;
+            border: none;
+            border-radius: 8px;
+            height: 40px;
+            padding: 5px 10px; /* 調整內部文字間距 */
+            font-size: 1rem;
+            text-align: left; /* 文字靠左對齊 */
+            color: #fff;
+            background: transparent;
+            outline: none;
+            caret-color: #fff;
+            line-height: 1.5; /* 調整文字與框內的上下距離 */
+        }
+
+        .textBox input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .textBox span{
+            font-size: 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 600;
+            color: #9F70B8;
+            padding-left: 16px;
+        }
+
+        .textBox .guessBtn{
+            display: flex;
+            justify-content: center;
+            align-self: center;
+            align-items: center;
+            margin-left: auto;
+            border-radius: 0 12px 12px 0;
+            background: linear-gradient(to bottom, #4FD5BD 0%, #18B092 80%, #1C8F80 100%);
+            height: 60px;
+            width: 110px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffff;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .textBox .guessBtn:disabled {
+            background: gray;
+            cursor: not-allowed;
+            opacity: 0.6; /* 增加半透明效果 */
+        }
+
+        .checkBtn:active, .startBtn:active, .clearBtn:active, .guessBtn:active {
+            transform: scale(0.95); /* 點擊縮放效果 */
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* 內凹陰影，模擬按下效果 */
+        }
+
+        .displayBox{
+            display: flex;
+            flex-direction: column; /* 最新紀錄在上 */
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 543px;
+            height: 105px;
+            background:linear-gradient(to bottom,#6E4685 0%,#6C4481 0%, #62387A 100%);
+            border-radius: 12px;
+            box-shadow: inset 0 8px 5px #5A396C;
+            margin: 16px 16px 4px; /* 增加上下左右外邊距 */
+            padding-left: 16px;
+            padding-bottom: 60px;
+            
+            overflow-y: scroll; /* 啟用垂直滾動條 */
+            overflow-x: hidden; /* 隱藏水平滾動條 */
+        }
+
+        /* 滾動條樣式 */
+        .displayBox::-webkit-scrollbar {
+            width: 16px;
+        }
+
+        .displayBox::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #C0A4D8, #A47EBF); /* 漸變顏色 */
+            border-radius: 10px; /* 圓角 */
+            border: 3px solid #EEE5F3; /* 邊框與軌道分離 */
+        }
+
+        .displayBox::-webkit-scrollbar-track {
+            background: #EEE5F3; /* 軌道背景顏色 */
+            border-radius: 10px; /* 軌道圓角 */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* 微弱陰影 */
+        }
+
+        /* 歷史記錄樣式 */  
+        .displayBox div {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 8px; /* 控制資料間的垂直距離 */
+            padding: 2px 5px; /* 增加內部間距 */
+            width: 100%; /* 確保寬度一致 */
+            box-sizing: border-box; /* 確保 padding 不影響寬度計算 */
+            color: #ffffff;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+
+        .displayBox div:first-child {
+            margin-top: 10px; /* 與上邊框之間的距離 */
+        }
+
+        /* 星星符號樣式 */
+        .displayBox .star {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .containerBtn{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding-top: 8px;
+            padding-bottom: 16px;
+        }
+
+        /* 按鈕圖示樣式 */
+        .containerBtn button img {
+            width: 40px; /* 圖示寬度 */
+            height: 40px; /* 圖示高度 */            
+        }
+                
+
+        .checkBtn{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 32px;
+            border-radius: 16px;
+            background: linear-gradient(to bottom, #FDA84A 0%, #EE6D3A 80%, #C65130 100%);
+            height: 75px;
+            width: 180px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffff;
+        }
+
+        .startBtn{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 8px;
+            border-radius: 16px;
+            background: linear-gradient(to bottom, #4FD5BD 0%, #18B092 80%, #1C8F80 100%);
+            height: 75px;
+            width: 180px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffff;
+        }
+
+        .clearBtn{
+            display: flex;
+            justify-content: center;
+            align-self: center;
+            align-items: center;
+            margin-left: 8px;
+            border-radius: 16px;
+            background: linear-gradient(to bottom, #39D2F6 0%, #0191B4 80%, #0E89A3 100%);
+            height: 60px;
+            width: 60px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffff;
+        }
+
+        /* 按鈕的禁用樣式 */
+        .checkBtn:disabled, .startBtn:disabled, .clearBtn:disabled {
+            background: gray;
+            cursor: not-allowed;
+            opacity: 0.6; /* 增加半透明效果 */
+        }
+
+    </style>
+
+  </head>
+    <div class="background">
+        <div class="box">
+            <h1>1A2B</h1>
+            <div class="textBox">
+                <input type="text" id="guess_input" placeholder="Please type here" disabled>
+                <button class="guessBtn" id="guess_Btn" disabled>Guess!</button>
+            </div>
+            <div class="displayBox" id="history">
+                <!-- History will be displayed here -->
+                <div>
+                    <img src="star-icon.svg" class="star" alt="Star Icon">
+                    1234 ---- 2A1B
+                </div>
+            </div>
+            <div class="containerBtn">
+                <button class="checkBtn" id="check_Btn" disabled>
+                    <img src="check-icon.svg" alt="Check Icon"> Check
+                </button>
+                <button class="startBtn" id="start_Btn">
+                    <img src="start-icon.svg" alt="Start Icon"> Start
+                </button>
+                <button class="clearBtn" id="clear_Btn" disabled>
+                    <img src="clear-icon.svg" alt="Clear Icon">
+                </button>
+            </div>
+        </div>
+    </div>
+
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const startBtn = document.getElementById('start_Btn')
+        const checkBtn = document.getElementById('check_Btn')
+        const clearBtn = document.getElementById('clear_Btn')
+        const guessBtn = document.getElementById('guess_Btn')
+        const guessInput = document.getElementById('guess_input')
+        const history = document.getElementById('history')
+
+        let answer;
+        
+        //------------------------------------------------------
+
+        //定義初始化函數
+        function initializeGame() {
+            guessInput.value = ''; // 初始狀態沒有值在輸入框裡面。
+            history.innerHTML = ''; // 用 innerHTML 把「原本的內容清空」之後，再插入「新的值」。
+            guessBtn.disabled = true; // 初始狀態「猜數字按鍵」沒辦法點選
+            clearBtn.disabled = true; // 初始狀態「清除按鍵」沒辦法點選
+            checkBtn.disabled = true; // 初始狀態「檢查答案按鍵」沒辦法點選
+            guessInput.disabled = true; // 初始狀態「輸入框裡面也沒辦法輸入內容」
+        }
+
+        //------------------------------------------------------
+
+        //開始遊戲
+        startBtn.addEventListener('click',() =>{
+            initializeGame(); // 按下開始後，會變成初始化的狀態的介面
+            answer = generateAnswer(); //生成答案出來
+            guessBtn.disabled = false; //點選 Start 鍵後，可以點選「清除按鍵」。
+            clearBtn.disabled = false; //可以點選「清除按鍵」。
+            checkBtn.disabled = false; //可以點選「檢查答案按鍵」。
+            guessInput.disabled = false; //「輸入框裡面可以輸入內容」。
+            alert('遊戲開始囉 ! 請輸入 4 位不重複的數字。'); //按下開始遊戲後會跳出此提示窗。
+        });
+
+        //------------------------------------------------------
+
+        //遊戲重製
+        clearBtn.addEventListener('click',initializeGame); //按下之後，會初始化所有歷史紀錄
+
+        //查看正確答案
+        checkBtn.addEventListener('click',() => {
+            alert(`正確答案是:${answer}`);
+        });
+
+        //------------------------------------------------------
+
+        //猜數字
+        guessBtn.addEventListener('click',() => {
+            const guess = guessInput.value.trim(); // 輸入值之後按下猜的按鈕會回傳值，而 trim 是為確保不會有其他數字以外的符號出現。
+            if(!isValidGuess(guess)) { // 如果輸入的值不是數字，
+                alert('輸入不正確 ! 請輸入 4 位不重複的數字'); //則會跳出提視窗顯示說 "輸入不正確 ! 請輸入正確的 4 位數字" 。
+                guessInput.value = ''; // 然後將輸入框內的值清空，請你重新輸入。
+                return; // 回傳不正確的資料，做上述的動作。
+            }
+
+            const result = calculateAB(guess); // 宣告正確答案等於猜的 4 位數字，則會發生以下事件。
+            addHistory(guess, result); // 將猜過的數字存放進歷史紀錄中。
+            if (result === '4A0B') { // 如果答案正確也就是 4A0B，
+                alert('恭喜你 ! 你猜中正確答案了。'); // 則會跳出提視窗顯示說 "恭喜你 ! 你猜中正確答案了" 。
+            }
+            guessInput.value = ''; // 如果沒有答對輸入框內的值清空，請你重新輸入。
+        });
+
+        //------------------------------------------------------
+
+        // 隨機生成 4 位數字
+        function generateAnswer() { //產生一個事件委派方法，目的是隨機生成 4 位數字。
+            const digits = []; // 宣告從 0 到 9 中的任一個數字，所以會有 10 個放置數字的位置
+            while (digits.length < 4){ // 當放數字的位置(長度)不能超過 4 個。
+                const num = Math.floor(Math.random() * 10); // "digit" 是每次隨機生成的一個數字。取得亂數後，會回傳 0 或 1 或 2 或 3...或 9
+                if (!digits.includes(num)){ //如果這個數字還不在陣列中的話，
+                    digits.push(num); //則會將這個數字加入陣列裡。
+                }
+            }
+            return digits.join(''); //將數字陣列轉回字串，並回傳。
+            // 也就是說 digits 生成的數字假設是[3,7,1,9]，則會回傳 "3719" 。
+        }
+
+        //------------------------------------------------------
+
+        // 確認猜測的數字為有效內容，其中要有這些條件 : (1)必須是 4 位數，(2)每位數字不能重複，(3)必須是純數字
+        function isValidGuess(guess) {
+            if (guess.length !== 4) return false; // (1)確認字串長度必須是 4 位數，否則回傳值錯誤。
+            if (new Set(guess).size !== 4) return false; // (2)將輸入的字串 guess 的字元存入一個 Set ，重複的字元只會有一次。
+                                                         // .size 則是檢查 Set 中的字元個數。
+                                                         // 如果 Set 的大小不是 4 ，表示輸入中有重複字元，則會回傳 false 。
+            if (!/^\d+$/.test(guess)) return false;
+            return true;
+            
+        }; // 補充 Set 是一種資料結構，當一組資料加入到 Set 時，重複的資料只會被儲存一次。，Set 可以快速檢查是否有重複的資料在裡面。
+           // .size 是 Set 的屬性，代表 Set 中的元素個數，如果 Set 中有 4 個值，則 .size 會回傳 4 。
+
+        //------------------------------------------------------
+
+        // 計算輸入的數字 (guess) 和正確答案 (answer) 之間的差異
+        function calculateAB(guess) {
+            let a = 0, b = 0; // 初始值為0 ， a 代表「數字和位置都正確」， b 代表「數字正確但位置錯誤」。
+            for (let i = 0; i < 4; i++) { // 假設輸入的數字和正確答案都是 4 位數字，使用 for 迴圈逐一檢視輸入字串的每個字元，i 為當前的索引(位值)。
+                if (guess[i] === answer[i]) {  //如果輸入的數字 [i] 和正確答案的數字和位置都一樣。
+                    a++; //則變數 a 加 1。
+                }
+                else if (answer.includes(guess[i])) { //如果正確的答案內有數字被猜到，但位置不正確(這個條件)
+                    b++; //則變數 b 加 1。
+                }
+            }
+            return `${a}A${b}B`; //最後回傳 幾A幾B。
+        }
+
+        //------------------------------------------------------
+
+        // 將 猜到的值(數字&幾A幾B)，顯示再歷史紀錄中，也就是 displayBox 裡面。
+        function addHistory(guess, result) {
+            const entry = document.createElement('div'); //建立一個新的 <div> 元素，顯示單條猜測的歷史紀錄。
+            entry.innerHTML = `<img src="star-icon.svg" class="star" alt="Star Icon">${guess} ---- ${result}`;
+            // 設置這個 <div> 的內容，每條猜測的歷史紀錄都包含一個星星符號和猜測結果。
+            // 例如：★ 1234 ---- 2A1B    
+            history.insertBefore(entry, history.firstChild);
+            updateScrollbar();
+        }
+        //------------------------------------------------------
+
+        function updateScrollbar() {
+            const totalRecords = history.childElementCount; // 獲取記錄數量
+
+            // 強制顯示滾動條，即使只有一筆記錄
+            history.style.overflowY = 'scroll';
+
+            // 控制滾動條內部的顯示條高度，隨資料數量變化
+            const scrollbarThumb = document.querySelector('.displayBox::-webkit-scrollbar-thumb');
+            if (scrollbarThumb) {
+                const thumbHeight = Math.max(30, 100 - totalRecords * 5); // 動態調整顯示條高度
+                scrollbarThumb.style.height = `${thumbHeight}px`;
+            }
+        }
+
+        //------------------------------------------------------
+
+        // 在頁面載入完成後執行初始化
+            initializeGame();
+
+    </script>
+  </body>
+</html>

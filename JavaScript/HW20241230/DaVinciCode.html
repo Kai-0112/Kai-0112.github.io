@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kai</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kai</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
 <style>
     * {
@@ -16,20 +16,21 @@
 
     .background {
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: center; /* 與螢幕左右置中 */        
+        align-items: center; /* 與螢幕上下置中 */        
         width: 100%;
-        height: 100vh;
+        height: 100vh; /* 100vh => 此元素會被撐開與螢幕的高度一致 */
+                    
         background-color: #FAFAFA;
-        background-image: radial-gradient(#e7ecf1 10%, transparent 10%),
-                            radial-gradient(#e7ecf1 10%, transparent 10%);
+        background-image: radial-gradient(#e7ecf1 10%, transparent 10%),radial-gradient(#e7ecf1 10%, transparent 10%);
         background-size: 100px 100px;
         background-position: 0 0, 50px 50px;
+        /*bootstrap 套件製作的背景*/
     }
 
     .background .box {
         display: flex;
-        flex-direction: column;
+        flex-direction: column; /* 內容物呈現直向排列 */
         align-items: center;
         width: 250px;
         height: 500px;
@@ -37,21 +38,24 @@
         padding-bottom: 12px;
         background-color: #EAEEF2;
         border-radius: 24px;
-        box-shadow:
+        box-shadow: /* 製作 Container 陰影，調整陰影位置與顏色 */
             -2px 0 2px rgba(255, 255, 255, 0.5),
             2px 0 2px rgba(177, 188, 191, 0.5),
             0 2px 2px rgba(177, 188, 191, 0.5),
             0 -2px 2px rgba(255, 255, 255, 0.5);
     }
 
-    .background .box .display-word {
+    .background .box .display-word {  /* Display Label 1-100 的數字 */
         font-size: 32px;
         font-weight: 600;
         font-family: Arial, Helvetica, sans-serif;
         color: #667381;
     }
 
-    .background .box .label {
+    .background .box .label { /* Display 輸入框 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 210px;
         height: 45px;
         border-radius: 64px;
@@ -63,17 +67,13 @@
             2px 0 2px rgba(177, 188, 191, 0.5),
             0 2px 2px rgba(177, 188, 191, 0.5),
             0 -2px 2px rgba(255, 255, 255, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+        text-align: center; /* 輸入框內打出來的字要顯示在中間 */
         font-size: 24px;
         color: #667381;
-        padding-left: 10px; /* Adjust padding to move text away from the edge */
-        box-sizing: border-box; /* Ensure padding is included in dimensions */
+        padding-left: 10px;
     }
 
-    .background .box .container {
+    .background .box .container { /* 設定數字按鈕的排列方式 */
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
@@ -161,7 +161,7 @@
     </div>
 </div>
 
-  <!-- Modal -->
+  <!-- 這個是 Bootstrap 的素材-->
   <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -183,57 +183,59 @@
     </div>
 </div>
 
-  <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let min = 1;
-            let max = 100;
-            let secret = Math.floor(Math.random() * (max - min + 1)) + min;
-            const displayWord = document.querySelector('.display-word');
-            const label = document.getElementById('label');
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-            document.querySelectorAll('.button[data-value]').forEach(button => {
-                button.addEventListener('click', () => {
-                    label.textContent += button.getAttribute('data-value');
-                });
-            });
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let min = 1;
+        let max = 100;
+        let secret = Math.floor(Math.random() * (max - min + 1)) + min;
+        const displayWord = document.querySelector('.display-word');
+        const label = document.getElementById('label');
 
-            document.getElementById('delete').addEventListener('click', () => {
-                label.textContent = label.textContent.slice(0, -1);
-            });
-
-            document.getElementById('enter').addEventListener('click', () => {
-                const guess = parseInt(label.textContent, 10);
-                if (isNaN(guess) || guess < min || guess > max) {
-                    alert(`Please enter a valid number between ${min} and ${max}.`);
-                    label.textContent = '';
-                    return;
-                }
-
-                if (guess === secret) {
-                    document.getElementById('correctAnswer').textContent = secret;
-                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    successModal.show();
-                } else if (guess < secret) {
-                    min = guess + 1;
-                    displayWord.textContent = `${min}-${max}`;
-                } else {
-                    max = guess - 1;
-                    displayWord.textContent = `${min}-${max}`;
-                }
-
-                label.textContent = '';
-            });
-
-            document.getElementById('start').addEventListener('click', () => {
-                min = 1;
-                max = 100;
-                secret = Math.floor(Math.random() * (max - min + 1)) + min;
-                displayWord.textContent = '1-100';
-                label.textContent = '';
+        document.querySelectorAll('.button[data-value]').forEach(button => {
+            button.addEventListener('click', () => {
+                label.textContent += button.getAttribute('data-value');
             });
         });
-    </script>
-      
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
+
+        document.getElementById('delete').addEventListener('click', () => {
+            label.textContent = label.textContent.slice(0, -1);
+        });
+
+        document.getElementById('enter').addEventListener('click', () => {
+            const guess = parseInt(label.textContent, 10);
+            if (isNaN(guess) || guess < min || guess > max) {
+                alert(`Please enter a valid number between ${min} and ${max}.`);
+                label.textContent = '';
+                return;
+            }
+
+            if (guess === secret) {
+                document.getElementById('correctAnswer').textContent = secret;
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+            } else if (guess < secret) {
+                min = guess + 1;
+                displayWord.textContent = `${min}-${max}`;
+            } else {
+                max = guess - 1;
+                displayWord.textContent = `${min}-${max}`;
+            }
+
+            label.textContent = '';
+        });
+
+        document.getElementById('start').addEventListener('click', () => {
+            min = 1;
+            max = 100;
+            secret = Math.floor(Math.random() * (max - min + 1)) + min;
+            displayWord.textContent = '1-100';
+            label.textContent = '';
+        });
+    });
+</script>
+    
+
+</body>
 </html>
