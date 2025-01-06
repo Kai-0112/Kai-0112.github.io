@@ -162,7 +162,10 @@
         function addHistory(guess, result) { //參數 guess：用戶猜測輸入的字串（例如 "1234"）; result：根據猜測與答案計算出的結果（例如 "2A1B"）。
             const entry = document.createElement('div'); //創建一個新的 HTML <div> 元素，這個元素會用來顯示一條歷史記錄，entry 為新建立的變數。
             entry.innerHTML = `<img src="star-icon.svg" class="star" alt="Star Icon">${guess} ---- ${result}`; //innerHTML 插入星星符號在紀錄中。
-            history.insertBefore(entry, history.firstChild);
+
+            history.insertBefore(entry, history.firstChild); 
+            //entry 是要插入的新節點，history.firstChild 是要插入的位置，括號裡的確是方法的參數，它們用於定義插入的「對象」（新節點）和「位置」（參考子節點）。
+
             // 將新建立的 entry 元素插入到 history 容器的第一個子元素之前。
             // 這樣，最新的猜測紀錄會顯示在最上方，而不是追加到最後。
         }
