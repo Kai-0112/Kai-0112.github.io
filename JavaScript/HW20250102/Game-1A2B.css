@@ -1,8 +1,8 @@
-* {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    font-family: Arial, Helvetica, sans-serif;
+    * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        font-family: Arial, Helvetica, sans-serif;
     }
 
     .background{
@@ -103,7 +103,7 @@
 
     .displayBox{
         display: flex;
-        flex-direction: column; /* 最新紀錄在上 */
+        flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
         width: 543px;
