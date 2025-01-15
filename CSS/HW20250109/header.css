@@ -1,0 +1,8 @@
+.dropdown-toggle::after {
+    display: none; /* 隱藏箭頭 */
+}
+
+.dropdown-toggle {
+    padding: 5px 10px; /* 調整內距 */
+    margin-left: 10px;
+}

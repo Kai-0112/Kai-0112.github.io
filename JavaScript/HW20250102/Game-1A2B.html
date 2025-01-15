@@ -172,25 +172,7 @@
 
         //------------------------------------------------------
 
-        //J.更新滾動條的顯示樣式和行為
-        function updateScrollbar() { // 無參數：函式不需要接收外部的輸入，直接操作與歷史記錄相關的 DOM 元素。
-            const totalRecords = history.childElementCount; // 獲取記錄數量
-            // 宣告新增的變數 totalRecords
-            // history.childElementCount，
-            // history 是 .displayBox（歷史記錄容器）的 DOM 元素。childElementCount 是 DOM 屬性，用來返回 history 內部子元素（歷史記錄項目）的數量。
-            // 舉例:如果 history 容器內有 3 個 <div>（表示 3 筆記錄），則 totalRecords 的值為 3。
-
-            history.style.overflowY = 'scroll';
-            // style.overflowY：用來控制垂直方向上的滾動條顯示行為，設為 'scroll' 表示強制顯示滾動條，即使記錄數量很少，內容沒有超出容器高度。
-
-            const scrollbarThumb = document.querySelector('.displayBox::-webkit-scrollbar-thumb');
-            // document.querySelector : 用來選擇 CSS 樣式為 .displayBox::-webkit-scrollbar-thumb 的 DOM 元素。
-            //::-webkit-scrollbar-thumb 是一種伺服於滾動條樣式的 CSS 偽元素，表示滾動條內的顯示條（Thumb）。
-        }
-
-        //------------------------------------------------------
-
-        //K.頁面載入完成後執行初始化
+        //J.頁面載入完成後執行初始化
             initializeGame();
 
     </script>
