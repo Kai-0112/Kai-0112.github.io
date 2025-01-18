@@ -1,0 +1,25 @@
+/* ---about-container--- */
+
+.about-container .card-body {
+    width: 40%;
+    padding: 100px 20px 100px 100px;
+}
+
+.about-container .img-box {
+    width: 100%;
+    background-image: url(background-about.6780dd41.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.about-container h2 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+@media screen and (max-width:991px) {
+    .about-container .img-box {
+        aspect-ratio: 1/.65;
+    }
+}

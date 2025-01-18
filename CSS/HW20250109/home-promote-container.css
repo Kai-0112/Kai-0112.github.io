@@ -1,0 +1,19 @@
+/* ---home-promote-container--- */
+
+.home-promote-container .card-body {
+    padding: 65px 55px;
+}
+
+.home-promote-container .img-box {
+    width: 100%;
+    background-image: url(background-promote.6373dfcb.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+@media screen and (max-width:991px) {
+    .home-promote-container .img-box {
+        height: 200px;
+    }
+}

@@ -1,0 +1,44 @@
+/* ---poster-container--- */
+
+.poster-container .dots-list {
+    position: absolute;
+    bottom: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    z-index: 1;
+}
+
+.poster-container .dots-list .bullet {
+    width: 15px;
+    height: 5px;
+    border-radius: 20%;
+    background-color: #e7e7e7;
+}
+
+.poster-container .dots-list .bullet-active {
+    background-color: #2ca33b;
+}
+
+.poster-container .next-btn,
+.poster-container .pre-btn {
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    aspect-ratio: 1/1;
+    background-color: #ffffffc2;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+    z-index: 1;
+}
+
+.poster-container .pre-btn {
+    left: 45px;
+}
+
+.poster-container .next-btn {
+    right: 45px;
+}

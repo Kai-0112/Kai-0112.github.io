@@ -1,0 +1,35 @@
+/* ---promote-container--- */
+
+.promote-container .img-box {
+    max-width: 566px;
+    aspect-ratio: 556/315;
+}
+
+.promote-container .content a {
+    font-size: 21px;
+    color: #2ca33b;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.promote-container {
+    overflow-x: hidden;
+    background-color: #FFF7F2;
+    padding: 50px 0;
+}
+
+.promote-container .promote-carousel {
+    margin-top: 40px;
+    overflow: unset;
+}
+
+
+.promote-container .promote-carousel a:hover {
+    transform: translateY(-10px);
+}
+
+@media screen and (min-width:992px) {
+    .promote-container .content {
+        margin-left: 100px;
+    }
+}

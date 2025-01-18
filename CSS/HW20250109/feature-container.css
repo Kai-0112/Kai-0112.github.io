@@ -1,0 +1,11 @@
+/* ---feature-container--- */
+
+.feature-container .icon i {
+    font-size: 30px;
+    color: #2ca33b;
+}
+
+.feature-container .title {
+    font-size: 18px;
+    font-weight: bold;
+}
