@@ -1,0 +1,179 @@
+/* 左側欄樣式 */
+.left-section {
+    background-color: #FFDA65;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    color: #FFFFFF;
+    position: relative;
+}
+
+/* 左側上方圖片的容器 */
+.left-section .image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+/* 左側上方圖片or(之後串 API 的影片) */
+.left-section .image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 遮罩效果 */
+.left-section .image-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1); /* 黑色半透明遮罩 */
+    pointer-events: none; /* 確保不影響點擊 */
+    z-index: 1;
+}
+
+/* 左側上方資訊 */
+.left-section .image-container .weather-info {
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    color: #FFFFFF;
+    z-index: 2;
+}
+
+/* 左側上方地區-Taiwan */
+.left-section .weather-info h3 {
+    font-size: 1.5rem;
+}
+
+/* 左側上方溫度 */
+.left-section .weather-info h1 {
+    font-size: 3rem;
+}
+
+/*---------------------------------------------------------------------------*/
+
+/* 左側代辦事項全部框架 */
+.todo-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 16px;
+    padding-top: 16px;
+    /* 預留按鈕空間 */
+    position: relative;
+    /* 以此為基準定位按鈕 */
+    height: 80%;
+    /* 避免內容影響按鈕 */
+}
+
+/* 左側代辦事項該日的日期 */
+.todo-list h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+/* 左側代辦事項完成內容 */
+.todo-item {
+    position: relative;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding-bottom: 10px;
+}
+
+.todo-item::after {
+    content: "";
+    position: absolute;
+    width: 214px;
+    /* 底線寬度與項目等寬 */
+    height: 1px;
+    /* 底線高度 */
+    background-color: #FFFFFF;
+    /* 底線顏色 */
+}
+
+
+/* 左側代辦事項完成時間 */
+.todo-item .fw-bold {
+    font-size: 1rem;
+}
+
+
+.add-task-btn {
+    position: absolute;
+    /* 固定按鈕位置 */
+    bottom: 24px;
+    /* 距離底部 24px */
+    right: 24px;
+    /* 距離右側 24px */
+    background-color: #FFFFFF;
+    color: #FFDA65;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0px 4px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    /* 確保按鈕顯示在最上層 */
+}
+
+/* 按鈕 hover 效果 */
+.add-task-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* 滾動條樣式 */
+.todo-list {
+    position: relative;
+    /* 讓新增按鈕以父容器為定位基準 */
+    max-height: calc(100% - 100px);
+    /* 限制代辦事項列表高度 */
+    padding-bottom: 20px;
+    /* 給按鈕留出空間，避免內容遮蓋 */
+}
+
+.show-all-btn {
+    border: 2px solid white;
+    /* 設定邊框為白色 */
+    font-weight: 600;
+    color: white;
+    /* 文字顏色變白 */
+    background-color: transparent;
+    /* 背景透明 */
+    padding: 4px 12px;
+    border-radius: 60px;
+    /* 圓角 */
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 24px;
+    /* 與上方事項間距 */
+    transition: background-color 0.3s, color 0.3s;
+    /* 增加過渡效果 */
+}
+
+.show-all-btn:hover {
+    background-color: white;
+    /* 滑鼠懸停時，背景變白 */
+    color: #FFDA65;
+    /* 文字變成深藍色，讓按鈕可讀性更佳 */
+}
+
+.edit-btn {
+    border: none;
+    /* 去邊框 */
+    background: none;
+    /* 去背景 */
+    color: #ffffff;
+    font-size: 0.7rem
+}

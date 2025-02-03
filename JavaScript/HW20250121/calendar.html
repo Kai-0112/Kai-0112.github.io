@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kai</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- 自訂 CSS -->
+    <link rel="stylesheet" href="left.css">
+    <link rel="stylesheet" href="right.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* 背景樣式 */
+        .background {
+            background-color: #FFF9EB;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* 主容器樣式 */
+        .calendar-container {
+            display: flex;
+            width: 1024px;
+            height: 500px;
+            background-color: #FFFFFF;
+            box-shadow: 0 10px 15px rgba(124, 124, 124, 0.2);
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 整體背景 -->
+    <div class="background">
+        <!-- 整體容器 -->
+        <div class="calendar-container">
+            <!-- 左側欄 -->
+            <div class="left-section">
+                <!-- 圖片容器 -->
+                <div class="image-container">
+                    <!-- 天氣溫度資訊 -->
+                    <div class="image-container">
+                        <img src="Group 53.png" alt="Weather Image" />
+                        <div class="weather-info">
+                            <h3 id="locationName">Unknown</h3>
+                            <h1 id="temperatureValue">--°</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="todo-list">
+                    <!-- 選擇日期後用 JS 顯示: ex. "Tue, January 14" -->
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <div class="selected-date-display fw-bold my-2"></div>
+                </div>
+            </div>
+
+            <!-- 右側月曆 -->
+            <div class="right-section">
+                <!-- 裝飾用圖形，可保留原樣或視需要調整 -->
+                <div class="decoration1"></div>
+                <div class="decoration2"></div>
+                <div class="decoration3"></div>
+                <div class="decoration4"></div>
+                <div class="decoration5"></div>
+
+                <!-- 月曆頭部 (年 / 月 + 前後按鈕) -->
+                <div class="calendar-header d-flex align-items-center justify-content-around">
+                    <button class="prev-month-btn fa-solid fa-less-than"></button>
+                    <h3>January <span>2025</span></h3>
+                    <button class="next-month-btn fa-solid fa-greater-than"></button>
+                </div>
+
+                <!-- 動態產生日曆用的容器 -->
+                <div class="calendar-row"></div>
+            </div>
+
+            <!-- 顯示全部代辦事項的模態視窗 -->
+            <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Header：只顯示標題，移除右上角關閉按鈕 -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="taskModalLabel">代辦事項</h5>
+                        </div>
+
+                        <!-- Body：這裡動態生成待辦事項清單 -->
+                        <div class="modal-body">
+                            <div id="modalTaskList"></div>
+                        </div>
+
+                        <!-- Footer：左側放「新增行程」「編輯」，右側放「儲存」「取消」「刪除」(依模式顯示) -->
+                        <div class="modal-footer d-flex justify-content-between">
+                            <div>
+                                <!-- 「新增行程」按鈕 -->
+                                <button class="btn btn-primary" id="addNewTask">新增行程</button>
+                                <!-- 「編輯」按鈕（只讀模式下顯示） -->
+                                <button class="btn btn-warning" id="editBtn" style="display: none;">編輯</button>
+                            </div>
+                            <div>
+                                <!-- 「儲存」按鈕（編輯模式下顯示） -->
+                                <button class="btn btn-success" id="saveBtn" style="display: none;">儲存</button>
+                                <!-- 「取消」按鈕（編輯模式下顯示） -->
+                                <button class="btn btn-secondary" id="cancelBtn" style="display: none;">取消</button>
+                                <!-- ★ 新增刪除按鈕 (id="deleteAllBtn")，對應 JS 中 deleteAllBtn -->
+                                <button class="btn btn-danger" id="deleteAllBtn" style="display: none;">刪除</button>
+                            </div>
+                        </div>
+                        <!-- End of modal-footer -->
+                    </div>
+                </div>
+            </div>
+            <!-- End of modal -->
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (含 Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const currentDate = new Date();
+            let selectedYear = currentDate.getFullYear();
+            let selectedMonth = currentDate.getMonth();
+            let selectedDay = currentDate.getDate();
+
+            const calendarGrid = document.querySelector(".calendar-row");
+            const todoList = document.querySelector(".todo-list");
+
+            const taskModal = new bootstrap.Modal(document.getElementById("taskModal"));
+            const modalTaskList = document.getElementById("modalTaskList");
+            const addNewTaskBtn = document.getElementById("addNewTask");
+
+            // 取得 Modal 裏的相關按鈕
+            const editBtn = document.getElementById("editBtn");
+            const saveBtn = document.getElementById("saveBtn");
+            const cancelBtn = document.getElementById("cancelBtn");
+            const deleteAllBtn = document.getElementById("deleteAllBtn");
+
+            // ======= 天氣相關 DOM 元素 =======
+            const locationName = document.getElementById("locationName");
+            const temperatureValue = document.getElementById("temperatureValue");
+
+            // 儲存每個日期的代辦事項
+            const tasks = {};
+
+            // 是否進入「多選刪除」模式
+            let isDeleteMode = false;
+
+            /* =============== (A) 天氣資料：使用 Geolocation + OpenWeatherMap =============== */
+            function fetchAndDisplayWeather() {
+                // 若您想改用 IP 解析，不需此段 geolocation
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+
+                            // 這裡請填入您自己的 OpenWeatherMap API Key
+                            const apiKey = "fb2c3bd861120add2b54d88da9891a9e"; // <--- 在此替換
+                            // 呼叫 OpenWeatherMap API
+                            const apiUrl =
+                                `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=zh_tw&appid=${apiKey}`;
+
+                            fetch(apiUrl)
+                                .then((res) => res.json())
+                                .then((data) => {
+                                    if (data.cod === 200) {
+                                        const city = data.name || "未知地點";
+                                        const temp = Math.round(data.main.temp);
+                                        locationName.textContent = city;
+                                        temperatureValue.textContent = temp + "°";
+                                    } else {
+                                        locationName.textContent = "天氣讀取失敗";
+                                        temperatureValue.textContent = "--°";
+                                    }
+                                })
+                                .catch((err) => {
+                                    console.error("天氣 API 出錯:", err);
+                                    locationName.textContent = "天氣失敗";
+                                    temperatureValue.textContent = "--°";
+                                });
+                        },
+                        (error) => {
+                            console.warn("使用者拒絕定位或錯誤:", error);
+                            locationName.textContent = "無法定位";
+                            temperatureValue.textContent = "--°";
+                        }
+                    );
+                } else {
+                    console.log("瀏覽器不支援 geolocation");
+                    locationName.textContent = "不支援定位";
+                    temperatureValue.textContent = "--°";
+                }
+            }
+
+            /* =============== (B) LocalStorage 讀 / 寫 =============== */
+            function loadTasksFromLocalStorage() {
+                try {
+                    const storedData = localStorage.getItem("myTasks");
+                    if (storedData) {
+                        const parsed = JSON.parse(storedData);
+                        Object.assign(tasks, parsed);
+                    }
+                } catch (e) {
+                    console.error("載入 localStorage 時發生錯誤：", e);
+                }
+            }
+
+            function saveTasksToLocalStorage() {
+                try {
+                    localStorage.setItem("myTasks", JSON.stringify(tasks));
+                } catch (e) {
+                    console.error("寫入 localStorage 時發生錯誤：", e);
+                }
+            }
+
+            /* 工具：將時間轉分鐘數 (排序用) */
+            function parseTimeToMinutes(time) {
+                if (!time || !/^\d{1,2}:\d{2}$/.test(time)) return 0;
+                const [hours, minutes] = time.split(":").map(Number);
+                return hours * 60 + minutes;
+            }
+
+            /* =============== (C) 更新左側清單 (含多選刪除) =============== */
+            function updateTodoList() {
+                const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+                const currentTasks = tasks[dateKey] || [];
+
+                // 排序由早到晚
+                currentTasks.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+
+                // 顯示當前選取日期
+                const formattedDate = new Date(selectedYear, selectedMonth, selectedDay).toLocaleDateString("en-US", {
+                    weekday: "short",
+                    month: "long",
+                    day: "numeric",
+                });
+
+                todoList.innerHTML = `<h5><i class="fa-solid fa-calendar-days me-2"></i>${formattedDate}</h5>`;
+
+                if (!isDeleteMode) {
+                    // 一般模式
+                    const limitedTasks = currentTasks.slice(0, 3);
+                    const extraTasksCount = currentTasks.length - 3;
+
+                    limitedTasks.forEach((task, index) => {
+                        todoList.innerHTML += `
+              <div class="todo-item" data-index="${index}">
+                <span class="fw-bold">${task.time}</span>
+                <div class="task-content">
+                  <span class="task-text">${task.text}</span>
+                  <button class="edit-btn btn ms-auto">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                  </button>
+                </div>
+              </div>
+            `;
+                    });
+
+                    // 如果超過 3 筆，顯示「顯示全部」
+                    if (extraTasksCount > 0) {
+                        todoList.innerHTML += `<button class="show-all-btn mt-3 btn btn-link">顯示全部</button>`;
+                    }
+                    // 新增行程按鈕
+                    todoList.innerHTML += `<button class="add-task-btn">+</button>`;
+
+                    // 綁定事件
+                    document.querySelectorAll(".edit-btn").forEach((btn) => {
+                        btn.removeEventListener("click", enableInlineEditing);
+                        btn.addEventListener("click", enableInlineEditing);
+                    });
+
+                    const showAllBtn = document.querySelector(".show-all-btn");
+                    if (showAllBtn) {
+                        showAllBtn.addEventListener("click", () => showAllTasks(currentTasks));
+                    }
+
+                    document.querySelector(".add-task-btn").addEventListener("click", addTask);
+                } else {
+                    // 多選刪除模式
+                    currentTasks.forEach((task, index) => {
+                        todoList.innerHTML += `
+              <div class="todo-item mb-2">
+                <input type="checkbox" class="delete-checkbox" data-index="${index}">
+                <span class="fw-bold ms-2">${task.time}</span>
+                <span class="ms-2">${task.text}</span>
+              </div>
+            `;
+                    });
+                    todoList.innerHTML += `
+            <button class="confirm-delete-btn btn btn-danger me-2">確定刪除</button>
+            <button class="cancel-delete-btn btn btn-secondary">取消</button>
+          `;
+                    document.querySelector(".confirm-delete-btn").addEventListener("click", confirmDelete);
+                    document.querySelector(".cancel-delete-btn").addEventListener("click", cancelDelete);
+                }
+            }
+
+            function confirmDelete() {
+                const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+                const currentTasks = tasks[dateKey] || [];
+                const checkboxes = document.querySelectorAll(".delete-checkbox");
+                const toDeleteIndexes = [];
+                checkboxes.forEach((chk) => {
+                    if (chk.checked) {
+                        toDeleteIndexes.push(parseInt(chk.getAttribute("data-index"), 10));
+                    }
+                });
+                // 反向排序
+                toDeleteIndexes.sort((a, b) => b - a).forEach((idx) => {
+                    currentTasks.splice(idx, 1);
+                });
+                saveTasksToLocalStorage();
+                isDeleteMode = false;
+                updateTodoList();
+            }
+
+            function cancelDelete() {
+                isDeleteMode = false;
+                updateTodoList();
+            }
+
+            /* =============== (D) 顯示全部行程(Modal) =============== */
+            function showAllTasks() {
+                const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+                const currentTasks = tasks[dateKey] || [];
+
+                let tempTasks = JSON.parse(JSON.stringify(currentTasks));
+                let isEditMode = false;
+                const modalBodyContainer = document.getElementById("modalTaskList");
+
+                const myModal = new bootstrap.Modal(document.getElementById("taskModal"));
+
+                function render() {
+                    modalBodyContainer.innerHTML = "";
+
+                    const listHTML = tempTasks
+                        .map((task, index) => {
+                            if (!isEditMode) {
+                                return `
+                  <div class="mb-3">
+                    <strong class="me-3">${task.time}</strong>
+                    <span>${task.text}</span>
+                  </div>
+                `;
+                            } else {
+                                return `
+                  <div class="d-flex align-items-center mb-3">
+                    <input 
+                      type="text"
+                      class="form-control time-input me-2"
+                      style="width:80px;"
+                      data-index="${index}"
+                      value="${task.time}"
+                    >
+                    <input
+                      type="text"
+                      class="form-control text-input"
+                      data-index="${index}"
+                      value="${task.text}"
+                    >
+                  </div>
+                `;
+                            }
+                        })
+                        .join("");
+
+                    modalBodyContainer.innerHTML = listHTML;
+
+                    if (isEditMode) {
+                        saveBtn.style.display = "inline-block";
+                        cancelBtn.style.display = "inline-block";
+                        editBtn.style.display = "none";
+                        deleteAllBtn.style.display = "inline-block";
+                    } else {
+                        editBtn.style.display = "inline-block";
+                        saveBtn.style.display = "none";
+                        cancelBtn.style.display = "none";
+                        deleteAllBtn.style.display = "none";
+                    }
+
+                    // 綁定 input
+                    if (isEditMode) {
+                        const timeInputs = modalBodyContainer.querySelectorAll(".time-input");
+                        const textInputs = modalBodyContainer.querySelectorAll(".text-input");
+                        timeInputs.forEach((inp) => {
+                            inp.addEventListener("input", (e) => {
+                                const idx = e.target.getAttribute("data-index");
+                                tempTasks[idx].time = e.target.value;
+                            });
+                        });
+                        textInputs.forEach((inp) => {
+                            inp.addEventListener("input", (e) => {
+                                const idx = e.target.getAttribute("data-index");
+                                tempTasks[idx].text = e.target.value;
+                            });
+                        });
+                    }
+                }
+
+                editBtn.onclick = function () {
+                    isEditMode = true;
+                    render();
+                };
+
+                saveBtn.onclick = function () {
+                    tasks[dateKey] = JSON.parse(JSON.stringify(tempTasks));
+                    updateTodoList();
+                    saveTasksToLocalStorage();
+                    isEditMode = false;
+                    render();
+                };
+
+                cancelBtn.onclick = function () {
+                    tempTasks = JSON.parse(JSON.stringify(currentTasks));
+                    isEditMode = false;
+                    render();
+                };
+
+                deleteAllBtn.onclick = function () {
+                    myModal.hide();
+                    isDeleteMode = true;
+                    updateTodoList();
+                };
+
+                myModal.show();
+                render();
+            }
+
+            /* =============== (E) 左側前3筆清單中的「即時編輯」(含刪除) =============== */
+            function enableInlineEditing(event) {
+                const item = event.target.closest(".todo-item");
+                if (!item) return;
+                const index = parseInt(item.getAttribute("data-index"), 10);
+                if (isNaN(index)) return;
+
+                const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+                if (!tasks[dateKey]) tasks[dateKey] = [];
+                const task = tasks[dateKey][index];
+                if (!task) return;
+
+                const timeElement = item.querySelector(".fw-bold");
+                const textElement = item.querySelector(".task-text");
+
+                if (item.querySelector(".edit-input")) return;
+
+                const timeInput = document.createElement("input");
+                timeInput.type = "text";
+                timeInput.value = timeElement.textContent.trim();
+                timeInput.classList.add("form-control", "d-inline", "w-25", "edit-input");
+
+                const textInput = document.createElement("input");
+                textInput.type = "text";
+                textInput.value = textElement.textContent.trim();
+                textInput.classList.add("form-control", "d-inline", "w-50", "edit-input");
+
+                const saveBtn = document.createElement("button");
+                saveBtn.classList.add("btn", "btn-sm", "btn-success", "ms-2");
+                saveBtn.textContent = "儲存";
+
+                const cancelBtn = document.createElement("button");
+                cancelBtn.classList.add("btn", "btn-sm", "btn-secondary", "ms-2");
+                cancelBtn.textContent = "取消";
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.classList.add("btn", "btn-sm", "btn-danger", "ms-2");
+                deleteBtn.textContent = "刪除";
+
+                timeElement.style.display = "none";
+                textElement.style.display = "none";
+
+                timeElement.parentNode.insertBefore(timeInput, timeElement);
+                textElement.parentNode.insertBefore(textInput, textElement);
+
+                const buttonContainer = document.createElement("div");
+                buttonContainer.classList.add("d-flex", "mt-2");
+                buttonContainer.appendChild(saveBtn);
+                buttonContainer.appendChild(cancelBtn);
+                buttonContainer.appendChild(deleteBtn);
+                item.appendChild(buttonContainer);
+
+                saveBtn.addEventListener("click", () => {
+                    const newTime = timeInput.value.trim();
+                    const newText = textInput.value.trim();
+                    if (newTime && newText) {
+                        task.time = newTime;
+                        task.text = newText;
+                        saveTasksToLocalStorage();
+                    }
+                    updateTodoList();
+                });
+
+                cancelBtn.addEventListener("click", () => {
+                    timeInput.remove();
+                    textInput.remove();
+                    buttonContainer.remove();
+                    timeElement.style.display = "inline";
+                    textElement.style.display = "inline";
+                });
+
+                deleteBtn.addEventListener("click", () => {
+                    tasks[dateKey].splice(index, 1);
+                    saveTasksToLocalStorage();
+                    updateTodoList();
+                });
+            }
+
+            /* =============== (F) 新增行程 =============== */
+            function addTask() {
+                let newTaskTime = prompt("請輸入時間 (格式：HH:MM，例如：08:00)：");
+                if (!newTaskTime || !/^\d{1,2}:\d{2}$/.test(newTaskTime)) {
+                    alert("請輸入正確的時間格式 (HH:MM)！");
+                    return;
+                }
+                let newTaskText = prompt("請輸入新的代辦事項：");
+                if (!newTaskText) {
+                    alert("您沒有輸入行程內容！");
+                    return;
+                }
+
+                const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+                if (!tasks[dateKey]) tasks[dateKey] = [];
+                tasks[dateKey].push({
+                    time: newTaskTime,
+                    text: newTaskText,
+                });
+
+                saveTasksToLocalStorage();
+                updateTodoList();
+            }
+
+            /* =============== (G) 切換月份 =============== */
+            function changeMonth(direction) {
+                selectedMonth += direction;
+                if (selectedMonth < 0) {
+                    selectedMonth = 11;
+                    selectedYear--;
+                } else if (selectedMonth > 11) {
+                    selectedMonth = 0;
+                    selectedYear++;
+                }
+                selectedDay = 1;
+                generateCalendar();
+                updateTodoList();
+            }
+
+            /* =============== (H) 點選日期 =============== */
+            function selectDate(day) {
+                selectedDay = day;
+                document.querySelectorAll(".calendar-day").forEach((dayDiv) => {
+                    dayDiv.classList.remove("current-day");
+                });
+                document.querySelectorAll(".calendar-day").forEach((dayDiv) => {
+                    if (parseInt(dayDiv.textContent.trim(), 10) === selectedDay) {
+                        dayDiv.classList.add("current-day");
+                    }
+                });
+
+                const formattedDate = new Date(selectedYear, selectedMonth, selectedDay).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                });
+                const selDateDiv = document.querySelector(".selected-date-display");
+                if (selDateDiv) {
+                    selDateDiv.textContent = formattedDate;
+                }
+
+                updateTodoList();
+            }
+
+            /* =============== (I) 生成日曆 (含判斷有無行程) =============== */
+            function generateCalendar() {
+                calendarGrid.innerHTML = "";
+
+                const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+                const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1).getDay();
+
+                const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "long" });
+                const currentMonthName = monthFormatter.format(new Date(selectedYear, selectedMonth));
+                document.querySelector(".calendar-header h3").innerHTML = `${currentMonthName} <span>${selectedYear}</span>`;
+
+                const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                weekdays.forEach((wd) => {
+                    const weekDiv = document.createElement("div");
+                    weekDiv.textContent = wd;
+                    weekDiv.classList.add("week");
+                    calendarGrid.appendChild(weekDiv);
+                });
+
+                // 補前面空格
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyDiv = document.createElement("div");
+                    calendarGrid.appendChild(emptyDiv);
+                }
+
+                // 產生日期
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayDiv = document.createElement("div");
+                    dayDiv.textContent = day;
+                    dayDiv.classList.add("calendar-day");
+
+                    // 若是選定日期 => .current-day
+                    if (day === selectedDay) {
+                        dayDiv.classList.add("current-day");
+                    }
+
+                    // 若當天有代辦事項 => .has-task
+                    const dateKey = `${selectedYear}-${selectedMonth}-${day}`;
+                    if (tasks[dateKey] && tasks[dateKey].length > 0) {
+                        dayDiv.classList.add("has-task");
+                    }
+
+                    dayDiv.addEventListener("click", () => selectDate(day));
+                    calendarGrid.appendChild(dayDiv);
+                }
+            }
+
+            /* =============== (J) 初始化 =============== */
+            document.querySelector(".prev-month-btn").addEventListener("click", () => changeMonth(-1));
+            document.querySelector(".next-month-btn").addEventListener("click", () => changeMonth(1));
+            addNewTaskBtn.addEventListener("click", addTask);
+
+            // 1. 從 localStorage 載入行程
+            loadTasksFromLocalStorage();
+
+            // 2. 取得當前天氣 (地理定位 + API)
+            fetchAndDisplayWeather();
+
+            // 3. 生成日曆 & 更新代辦清單
+            generateCalendar();
+            updateTodoList();
+        });
+    </script>
+</body>
+
+</html>

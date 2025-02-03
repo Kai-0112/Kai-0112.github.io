@@ -1,0 +1,197 @@
+/* =============================
+   右側月曆區 (原始樣式 + 新需求)
+   ============================= */
+
+/* 右側月曆樣式 */
+.right-section {
+    flex: 1;
+    position: relative;
+    padding: 20px;
+    background-color: #FFFFFF;
+}
+
+/* 裝飾用元素 (原樣保留) */
+.right-section .decoration1::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background-color: #FFDA65;
+    z-index: 1;
+}
+
+.right-section .decoration4::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    margin-top: 10px;
+    left: 0;
+    width: 40%;
+    height: 10px;
+    background-color: #ffffff;
+    border-radius: 0 10px 0 0;
+    z-index: 4;
+}
+
+.right-section .decoration2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 60px;
+    background-color: #FFDA65;
+    border-radius: 0 0 0 20px;
+    /* 下方圓角 */
+    z-index: 2;
+    /* 放在後面 */
+}
+
+.right-section .decoration3::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 40px;
+    height: 500px;
+    background-color: #FFDA65;
+    /* 橘色背景 */
+    border-radius: 0 0 0px 0px;
+    z-index: 3;
+}
+
+.right-section .decoration5::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 100%;
+    width: 30px;
+    height: 440px;
+    background-color: #ffffff;
+    border-radius: 0 10px 0 0;
+    z-index: 3;
+}
+
+/* 月曆標題 */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 245px;
+    /* 固定寬度，以 September 為基準 */
+    position: relative;
+    margin-top: 8px;
+}
+
+/* 月份左右切換按鈕 */
+.fa-less-than,
+.fa-greater-than {
+    border: none;
+    background: none;
+    padding: 8px;
+    /* 增加內間距，提升點擊範圍 */
+    font-size: 16px;
+}
+
+/* 月分的顏色 */
+.calendar-header h3 {
+    font-weight: 600;
+    font-size: 24px;
+    text-align: center;
+    flex: 1;
+    margin: 0;
+}
+
+/* 年分的顏色 */
+.calendar-header span {
+    color: #A1A1A1;
+    font-weight: 600;
+}
+
+/* 格子排版 (原樣保留) */
+.calendar-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.calendar-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    color: #777777;
+
+    /* ★ 每一排（row）加一條下邊框 ★ */
+    border-bottom: 1px solid #ddd;
+}
+
+/* 如果不想在最後一排（通常是該月最後一週）也有線，可以加這行 */
+.calendar-row:last-child {
+    border-bottom: none;
+}
+
+/* 星期標頭 (Sun, Mon...) */
+.week {
+    color: #212121;
+}
+
+/* =============================
+   新增：日期格子相關樣式
+   ============================= */
+.calendar-row div {
+    /* 移除每個日期格子的下邊框 */
+    /* 原本有 border-bottom: 1px solid #ddd; 的話就拿掉 */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    margin-left: 16px;
+    font-weight: bold;
+    position: relative;
+    /* 為了放置圓形底或藍色小圓點 */
+}
+
+/* 點選後的當前日期 => 顯示橘色圓底、並確保數字不消失 */
+.calendar-row div.current-day {
+    color: #fff;
+    /* 數字變白 */
+    position: relative;
+    /* 提升自身疊放順序 */
+    z-index: 1;
+    /* 使文字在圓形上方 */
+}
+
+.calendar-row div.current-day::before {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #FFDA65;
+    /* 橘色 */
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    /* 圓在文字後面 */
+}
+
+/* 如果該日期有代辦事項 => 顯示藍色小圓點 */
+.calendar-row div.has-task::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: #3498db;
+    /* 藍色 */
+    border-radius: 50%;
+    top: 100%;
+    /* 與下方留些距離，可自行微調 */
+    left: 50%;
+    transform: translateX(-50%);
+}
