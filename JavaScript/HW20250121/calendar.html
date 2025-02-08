@@ -135,54 +135,112 @@
         crossorigin="anonymous"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () { //適合初始化頁面功能(像是顯示動態 Model 內容或操作 DOM 元素)
+            // document 是指當前的 HTML 文件(DOM 文件)。
+            // addEventListener 方法用來監聽某個特定事件，並在發生時能夠執行回傳的函式 function()。
+            // "DOMContentLoaded 是事件名稱"，當此事件觸發時，會執行這段匿名函式的程式碼。
+            // DOMContentLoaded vs window.onload => (1).DOMContentLoaded : 當 HTML 文件結構完成，加載時會觸發(不等圖片和 CSS)，(2).window.onload => 當所有資源(HTML、圖片、CSS、JS)都完成加載時才會觸發。
+
+            // ======= 宣告日期相關的變數 =======
             const currentDate = new Date();
+            //宣告 new Date () 創建一個新的物件，代表當前系統時間(包括年、月、日、時、分、秒等)。
+            // currentDate 宣告為常數變數，是一個 Date 類型的常數變數，儲存 current 現在的時間和日期。
             let selectedYear = currentDate.getFullYear();
+            //宣告 getFullYear()方法是從 currentDate 的完整年份，ex 2025。selectedYear 是一個變數，儲存提取到的年份。
             let selectedMonth = currentDate.getMonth();
+            //宣告 getMonth() 方法從 currentDate 的提取月份。回傳月份 0 到 11之間的整數(index 0 表示 1月、11 表示 12月)，selectMonth 是一個變數，儲存提取到的月份。
             let selectedDay = currentDate.getDate();
+            //宣告 getDate() 方從 currentDate 當月的日期，回傳(1-31的整數)。selectDate 是一個變數，儲存提取的日期。
 
+            //--------------------------------------------------------------------------------------------------------------------------
+
+            // ======= 取得並指定常用 DOM 元素 =======
             const calendarGrid = document.querySelector(".calendar-row");
+            //取得一個類別名稱為.calendar-row 的 DOM 元素，並將它存入 calendarGrid 的變數中，其類別用來顯示日曆的網格，方便後續日曆插入內容及功能操作。
             const todoList = document.querySelector(".todo-list");
-
-            const taskModal = new bootstrap.Modal(document.getElementById("taskModal"));
-            const modalTaskList = document.getElementById("modalTaskList");
+            //取得一個類別名稱為.todo-list 的 DOM 元素，並將它加入 todo-list 的變數，其類別用放在代辦事項的列表中，後續用來新增、編輯或刪除等項目操作。
+            const taskModal = new bootstrap.Modal(document.getElementById("taskModal"));            
+            //呼叫 bootstrap 的 Modal 元件控制 getElementById 的 taskModal 對話框(Model)，這是Bootstrap的Modal物件。允許你開啟、關閉或操作彈出視窗。
+            //常見操作包括 taskModal.show()（顯示）或 taskModal.hide()（隱藏）。
             const addNewTaskBtn = document.getElementById("addNewTask");
-
-            // 取得 Modal 裏的相關按鈕
+            //取得 ID 為 addNewTask，並存入 addNewTaskBtn 的變數中，主要為新增項目的按鈕，後續會監聽此按鈕的點擊事件來開啟 taskModal 或新增一項新任務。
+            const modalTaskList = document.getElementById("modalTaskList");
+            //取得 ID 為 modalTaskList，並存入 modalTaskList 的變數中，其類別用來彈出視窗的代辦事項清單(點選顯示全部)，方便在對話框內顯示項目。
+            
+            
+            // ======= 取得 Modal 裏的相關按鈕 =======
             const editBtn = document.getElementById("editBtn");
+            //取得 ID 為 editBtn 的按鈕，用在編輯代辦事項。
             const saveBtn = document.getElementById("saveBtn");
+            //取得 ID 為 saveBtn 的按鈕，用在儲存變更。
             const cancelBtn = document.getElementById("cancelBtn");
+            //取得 ID 為 cancelBtn 的按鈕，用在取消操作並關閉對話框。
             const deleteAllBtn = document.getElementById("deleteAllBtn");
+            //取得 ID 為 deleteAllBtn 的按鈕，用在刪除所有代辦事項。
 
             // ======= 天氣相關 DOM 元素 =======
             const locationName = document.getElementById("locationName");
+            //取得 ID 為 locationName 的 DOM 元素，這應該用來顯示使用者地點名稱(如「台北市」)。
             const temperatureValue = document.getElementById("temperatureValue");
+            //取得 ID 為 temperatureValue 的 DOM 元素，這應該用來顯示當前溫度值(「25°C」)。
+
+            //--------------------------------------------------------------------------------------------------------------------------
 
             // 儲存每個日期的代辦事項
             const tasks = {};
+            //tasks 設定它是一個空物件，用來儲存每個日期相對應的代辦事項列表。以日期 => 代辦事項的對應表。
+            //假設你在 2025-02-08 和 2025-02-09 有不同的代辦事項，tasks 的內容可能如下： 
+            // const tasks = {
+            //   "2025-02-08": ["買牛奶", "寫專案報告", "運動 30 分鐘"],
+            //   "2025-02-09": ["閱讀一本書", "聯絡客戶"]
+            // };
+            //用在新增任務：將新任務加入特定日期的陣列中。
+            //用在刪除任務 : 從指定日期的陣列中移除某個任務。
+            //檢查是否有任務 : 透過日期檢查 tasks 中是否有資料。
+
 
             // 是否進入「多選刪除」模式
             let isDeleteMode = false;
+            //用於控制多選刪除模式的開啟和關閉。 是一個布林變數，用來判斷目前是否進入「多選刪除」模式。
+            //初始值為 false，表示預設狀態下並不是多選刪除模式。
+            //多選刪除模式的概念：(1).一般模式：使用者可以選取單個任務來查看或編輯。(2).多選刪除模式：使用者可以一次選取多個任務，並進行批次刪除。
+
+            //範例 code :
+            // if (isDeleteMode) {
+            // console.log("進入多選刪除模式，允許選擇多個任務進行刪除");
+            // } else {
+            // console.log("一般模式，僅能操作單個任務");
+            // }
+
+            //--------------------------------------------------------------------------------------------------------------------------
 
             /* =============== (A) 天氣資料：使用 Geolocation + OpenWeatherMap =============== */
-            function fetchAndDisplayWeather() {
-                // 若您想改用 IP 解析，不需此段 geolocation
+            function fetchAndDisplayWeather() { 
+            //建立一個方法存取天氣資料 API
                 if ("geolocation" in navigator) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const lat = position.coords.latitude;
-                            const lon = position.coords.longitude;
+                //檢查地理位置，navigator.geolocation 檢查瀏覽器是否支援地理定位功能。
+                //如果支援，則使用 getCurrentPosition() 方法來獲取當前經緯度，如果不支援，會顯示 "不支援定位" 的訊息。
+                    navigator.geolocation.getCurrentPosition( //getCurrentPosition 得到目前的經緯度，
+                        (position) => { //(position) 當獲取地理位置成功執行，position 物件中包含了使用者的經緯度資訊。
+                            const lat = position.coords.latitude;  //宣告常數變數 lat 為 位置中的 latitude 經度。
+                            const lon = position.coords.longitude; //宣告常數變數 lon 為 位置中的 longitude 經度。
 
-                            // 這裡請填入您自己的 OpenWeatherMap API Key
-                            const apiKey = "fb2c3bd861120add2b54d88da9891a9e"; // <--- 在此替換
+                            // 這裡請填入您自己的 OpenWeatherMap API Key，這裡的 API Key 不能暴露在前台中，不然很容易被人亂使用。
+                            const apiKey = "fb21111111111111111111111111"; // <--- 在此替換
+
                             // 呼叫 OpenWeatherMap API
                             const apiUrl =
                                 `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=zh_tw&appid=${apiKey}`;
-
-                            fetch(apiUrl)
-                                .then((res) => res.json())
-                                .then((data) => {
-                                    if (data.cod === 200) {
+                            // lat and lon 是從 position 物件中取得緯度和經度。
+                            // apiUrl 是 OpenWeatherMap API 的請求網址，其中包含:
+                                // units = metric : 溫度單位為攝氏度。
+                                // lang=zh_tw : 使用繁體中文顯示天氣描述。
+                                // appid=${apiKey}：API 金鑰（需自行申請）。
+                                
+                            fetch(apiUrl) // 透過 fetch() 方法向 OpenWeather API 發送請求，並取得天氣資料。
+                                .then((res) => res.json()) // 將回應轉換為 JSON 格式，便於後續處理。
+                                .then((data) => { // then((data) 成功獲得天氣資料。
+                                    if (data.cod === 200) { //如果
                                         const city = data.name || "未知地點";
                                         const temp = Math.round(data.main.temp);
                                         locationName.textContent = city;
@@ -204,7 +262,7 @@
                             temperatureValue.textContent = "--°";
                         }
                     );
-                } else {
+                } else { //當使用者拒絕定位或定位失敗時執行，顯示錯誤訊息。
                     console.log("瀏覽器不支援 geolocation");
                     locationName.textContent = "不支援定位";
                     temperatureValue.textContent = "--°";
