@@ -240,67 +240,134 @@
                             fetch(apiUrl) // 透過 fetch() 方法向 OpenWeather API 發送請求，並取得天氣資料。
                                 .then((res) => res.json()) // 將回應轉換為 JSON 格式，便於後續處理。
                                 .then((data) => { // then((data) 成功獲得天氣資料。
-                                    if (data.cod === 200) { //如果
-                                        const city = data.name || "未知地點";
-                                        const temp = Math.round(data.main.temp);
-                                        locationName.textContent = city;
-                                        temperatureValue.textContent = temp + "°";
+                                    if (data.cod === 200) { // 200 是 HTTP 狀態碼 (HTTP Status Code) ，是伺服器對客戶端（例如瀏覽器）請求的回應代碼，用來表示該請求的結果。
+                                        // 1xx（資訊類）：請求已被接收，繼續處理。
+                                        // 2xx（成功類）：請求已成功處理。
+                                        // 3xx（重導類）：需要進一步的操作（如重導向）。
+                                        // 4xx（客戶端錯誤類）：請求包含錯誤，無法處理。
+                                        // 5xx（伺服器錯誤類）：伺服器發生錯誤，無法完成請求。
+
+                                        // 200 OK 是最常見的狀態碼，表示請求成功且已回應正確的資料，如果回應是 200，我們可以放心處理 data，因為它包含正確的天氣資訊。
+                                        const city = data.name || "未知地點"; //顯示城市名稱，如果找不到名稱則顯示「未知地點」。
+                                        const temp = Math.round(data.main.temp); //取得溫度，並使用 Math.round() 進行四捨五入。
+                                        locationName.textContent = city; //顯示目前所待城市位置，對應第 182 行。
+                                        temperatureValue.textContent = temp + "°";//顯示目前所待城市溫度，對應第 184 行。
                                     } else {
                                         locationName.textContent = "天氣讀取失敗";
                                         temperatureValue.textContent = "--°";
-                                    }
+                                    } 
+                                    //以上 if 判斷式，會更新 DOM 元素：將城市名稱和溫度顯示在 locationName 和 temperatureValue 上，
+                                    //如果狀態碼不是 200，顯示「天氣讀取失敗」。
+                                    //對應第 182 和 184 行。
                                 })
-                                .catch((err) => {
-                                    console.error("天氣 API 出錯:", err);
-                                    locationName.textContent = "天氣失敗";
-                                    temperatureValue.textContent = "--°";
-                                });
                         },
-                        (error) => {
-                            console.warn("使用者拒絕定位或錯誤:", error);
-                            locationName.textContent = "無法定位";
+                        (error) => { //地理定位失敗(getCurrentPosition 的第二個參數)。
+                            console.warn("使用者拒絕定位或錯誤:", error); //錯誤物件 (error)：(1).使用者拒絕定位。(2).無法獲得位置。 (3).定位逾時。
+                            locationName.textContent = "無法定位"; //定位失敗或使用者拒絕：顯示「無法定位」，並將溫度顯示為 --°。
                             temperatureValue.textContent = "--°";
                         }
                     );
-                } else { //當使用者拒絕定位或定位失敗時執行，顯示錯誤訊息。
+                } else { //如果瀏覽器不支援 geolocation，直接顯示「不支援定位」，並將溫度設為 --°。
                     console.log("瀏覽器不支援 geolocation");
                     locationName.textContent = "不支援定位";
                     temperatureValue.textContent = "--°";
                 }
-            }
+            };
+
+            //簡單流程圖：
+            // [ 檢查地理定位支援 ]
+            //     ↓ 是
+            // [ 獲取經緯度 ]
+            //     ↓ 成功
+            // [ 發送 API 請求 ]
+            //     ↓ 成功
+            // [ 顯示城市與溫度 ]
+            //     ↓ 否
+            // [ 顯示錯誤訊息 ]
+
+            //--------------------------------------------------------------------------------------------------------------------------
 
             /* =============== (B) LocalStorage 讀 / 寫 =============== */
-            function loadTasksFromLocalStorage() {
+
+            // 1.loadTasksFromLocalStorage()：在網頁載入時自動執行，載入先前儲存的任務資料。
+            function loadTasksFromLocalStorage() { //從 localStorage 讀取儲存的資料，並將其載入到 tasks 物件 中，對應第 190 行。          
                 try {
                     const storedData = localStorage.getItem("myTasks");
+                    //localStorage.getItem("myTasks")：從 localStorage 取得名稱為 "myTasks" 的資料。如果沒有該資料，回傳 null。
                     if (storedData) {
-                        const parsed = JSON.parse(storedData);
-                        Object.assign(tasks, parsed);
+                        const parsed = JSON.parse(storedData); //JSON.parse(storedData)：將 JSON 格式的字串轉換回物件。
+                        Object.assign(tasks, parsed); //Object.assign(tasks, parsed)：將 parsed 物件合併到 tasks 物件中， 對應第 190 行。這樣可以在頁面載入時重新恢復先前儲存的任務。
                     }
-                } catch (e) {
+                } catch (e) { // 捕捉可能發生的錯誤，e.g. JSON.parse 解析失敗，並在 Console 控制台輸出錯誤訊息，防止程式崩潰。
                     console.error("載入 localStorage 時發生錯誤：", e);
-                }
-            }
+                } 
+            };
 
-            function saveTasksToLocalStorage() {
+            // 2.在新增、編輯或刪除任務後執行，將最新的任務資料保存到 localStorage 中。
+            function saveTasksToLocalStorage() { // 將當前的 tasks 物件 轉換成 JSON 字串，並保存到 localStorage 中，對應第 190 行。
                 try {
                     localStorage.setItem("myTasks", JSON.stringify(tasks));
-                } catch (e) {
+                    //localStorage.setItem("myTasks", JSON.stringify(tasks))，舉例:
+                    //JavaScript 檔:
+                    // {
+                    // "2025-02-08": ["買牛奶", "寫報告"],
+                    // "2025-02-09": ["運動 30 分鐘"]
+                    // }
+
+                    //轉換為 Json 檔後:
+                    //'{"2025-02-08":["買牛奶","寫報告"],"2025-02-09":["運動 30 分鐘"]}'
+
+                } catch (e) { //捕捉在保存資料過程中可能發生的錯誤，例如超過 localStorage 容量限制，並顯示錯誤訊息。
                     console.error("寫入 localStorage 時發生錯誤：", e);
                 }
-            }
+            };
 
-            /* 工具：將時間轉分鐘數 (排序用) */
+            //--------------------------------------------------------------------------------------------------------------------------
+
+            /* =============== (C) 時間字串處理小工具 =============== */
+
+            /* 工具：將時間轉分鐘數 */
             function parseTimeToMinutes(time) {
-                if (!time || !/^\d{1,2}:\d{2}$/.test(time)) return 0;
-                const [hours, minutes] = time.split(":").map(Number);
-                return hours * 60 + minutes;
-            }
+                if (!time || !/^\d{1,2}:\d{2}$/.test(time)) return 0; // !time 檢查 time 是否為空值 null 或 undefined，如果 time 為空，直接回傳 0。
+                // /^\d{1,2}:\d{2}$/：正規表達式檢查 time 是否符合 "HH:MM" 格式：
+                    // /^\d{1,2}：開頭為 1 至 2 位數的數字（代表小時）。
+                    // : 中間有一個冒號。
+                    // \d{2}$：最後有 2 位數字（代表分鐘）。
+                    // ^ 和 $：分別表示字串開頭和結尾，確保格式完全符合 HH:MM。
+                        //舉例 :
+                        //"10:30" → 符合格式，繼續處理。
+                        // "5:07" → 符合格式，繼續處理。
+                        // "5:7" 或 "abc" → 不符合格式，直接回傳 0。
 
-            /* =============== (C) 更新左側清單 (含多選刪除) =============== */
+                const [hours, minutes] = time.split(":").map(Number);
+                // time.split(":")：將時間字串透過 : 分割，回傳一個陣列。
+                    // "10:30" → ["10", "30"]
+                    // "5:07" → ["5", "07"]
+                //.map(Number)：將陣列中的每個字串轉換為數字。
+                    // ["10", "30"] → [10, 30]
+                
+                // 計算總分鐘數，回傳 hours * 60 + minutes，用於排序(由小到大代表由早到晚)，後續 time 會拿來排序時間。
+                return hours * 60 + minutes;
+                //hours * 60：將小時轉換為分鐘數。
+                //+ minutes：加上分鐘數，得到總分鐘數。
+            };
+
+            //--------------------------------------------------------------------------------------------------------------------------
+
+            /* =============== (D) 更新左側清單 (含多選刪除) =============== */
             function updateTodoList() {
+            // function updateTodoList() 此段函式功能的設計想法為根據選定日期，顯示當日的待辦事項，並切換兩種模式：
+            // 1.一般模式：
+                // 顯示前三個待辦事項（如果有更多則顯示「顯示全部」按鈕）。
+                // 提供 編輯 和 新增任務 的功能。
+            // 2.多選刪除模式：
+                // 允許使用者選取多個任務並一次刪除，提供「確定刪除」與「取消」按鈕。
+            
                 const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
+                // dateKey：生成一個唯一的日期鍵（如 "2025-02-08"），用來檢查左側 tasks 物件中的待辦事項。
+                // 選取 selectedYear、selectedMonth、selectedDay，左側代辦事項日期，對應第 148 、 150 、 152 行。
                 const currentTasks = tasks[dateKey] || [];
+                // currentTasks：取得該日期的待辦事項列表，若無則回傳空陣列 []。
 
                 // 排序由早到晚
                 currentTasks.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
@@ -396,7 +463,7 @@
                 updateTodoList();
             }
 
-            /* =============== (D) 顯示全部行程(Modal) =============== */
+            /* =============== (E) 顯示全部行程(Modal) =============== */
             function showAllTasks() {
                 const dateKey = `${selectedYear}-${selectedMonth}-${selectedDay}`;
                 const currentTasks = tasks[dateKey] || [];
@@ -503,7 +570,7 @@
                 render();
             }
 
-            /* =============== (E) 左側前3筆清單中的「即時編輯」(含刪除) =============== */
+            /* =============== (F) 左側前3筆清單中的「即時編輯」(含刪除) =============== */
             function enableInlineEditing(event) {
                 const item = event.target.closest(".todo-item");
                 if (!item) return;
@@ -581,7 +648,7 @@
                 });
             }
 
-            /* =============== (F) 新增行程 =============== */
+            /* =============== (G) 新增行程 =============== */
             function addTask() {
                 let newTaskTime = prompt("請輸入時間 (格式：HH:MM，例如：08:00)：");
                 if (!newTaskTime || !/^\d{1,2}:\d{2}$/.test(newTaskTime)) {
@@ -605,7 +672,7 @@
                 updateTodoList();
             }
 
-            /* =============== (G) 切換月份 =============== */
+            /* =============== (H) 切換月份 =============== */
             function changeMonth(direction) {
                 selectedMonth += direction;
                 if (selectedMonth < 0) {
@@ -620,7 +687,7 @@
                 updateTodoList();
             }
 
-            /* =============== (H) 點選日期 =============== */
+            /* =============== (I) 點選日期 =============== */
             function selectDate(day) {
                 selectedDay = day;
                 document.querySelectorAll(".calendar-day").forEach((dayDiv) => {
@@ -646,7 +713,7 @@
                 updateTodoList();
             }
 
-            /* =============== (I) 生成日曆 (含判斷有無行程) =============== */
+            /* =============== (J) 生成日曆 (含判斷有無行程) =============== */
             function generateCalendar() {
                 calendarGrid.innerHTML = "";
 
@@ -693,7 +760,7 @@
                 }
             }
 
-            /* =============== (J) 初始化 =============== */
+            /* =============== (K) 初始化 =============== */
             document.querySelector(".prev-month-btn").addEventListener("click", () => changeMonth(-1));
             document.querySelector(".next-month-btn").addEventListener("click", () => changeMonth(1));
             addNewTaskBtn.addEventListener("click", addTask);
