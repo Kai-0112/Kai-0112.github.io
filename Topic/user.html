@@ -10,9 +10,6 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <style>
-        .navbar-brand {
-            margin-left: -2rem;
-        }
 
         .right-area {
             margin-right: -2rem;
@@ -28,7 +25,7 @@
             font-weight: 700;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 991px) {
             .hero-title {
                 font-size: 36px;
             }
@@ -41,7 +38,7 @@
             font-size: 24px;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 991px) {
             .hero-subtitle {
                 font-size: 20px;
             }
@@ -69,49 +66,71 @@
             align-items: center;
             justify-content: center;
         }
-
-
+        
     </style>
 </head>
 
 <body class="bg-white">
 
     <!-- 導覽列 (Navbar) -->
+    <!-- navbar-expand-lg -> 992px (含) 以上維持展開，<992px 則收合成漢堡 -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
         <div class="container">
-            <!-- Logo / Brand -->
-            <a class="navbar-brand" href="#"><img src="logo.svg"></a>
+            <!-- LOGO 區 -->
+            <a class="navbar-brand" href="#">
+                <!-- 這裡可換成您自己的 Agoda 樣式 LOGO -->
+                <img src="logo.svg" alt="agoda" />
+            </a>
 
-            <!-- 漢堡選單切換鈕 (Mobile) -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <!-- 漢堡按鈕 (小螢幕出現) -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#agodaNavbar"
+                aria-controls="agodaNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <!-- 導覽列選單 -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- 左側功能區塊 -->
-                <ul class="left-area navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- 收合區 (大螢幕展開) -->
+            <div class="collapse navbar-collapse" id="agodaNavbar">
+                <!-- 左側區 (大螢幕時顯示「搜好房」「優惠專區」) 
+             小螢幕同樣會顯示，但因整個 Nav 都收合，所以下方會以條列顯示 -->
+                <ul class="navbar-nav me-auto align-items-lg-start align-items-center">
+                    <!-- 「搜好房」 -->
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="#!">搜好房</a>
                     </li>
+                    <!-- 「優惠專區」 -->
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="#!">優惠專區</a>
                     </li>
                 </ul>
 
-                <!-- 右側功能區塊 -->
-                <div class="right-area d-flex align-items-center gap-4">
-                    <!-- 刊登家中空房按鈕 -->
-                    <button class="btn btn-outline-primary border-1 rounded-5 fw-bold">刊登家中空房</button>
-                    <!-- 帳戶下拉區 -->
-                    <div class="d-flex align-items-center gap-2" role="button" tabindex="0">
-                        <i class="fa-solid fa-circle-user fs-4 px-1"></i>
-                        <span>我的帳戶</span>
-                        <i class="fa-solid fa-caret-down fs-4"></i>
-                    </div>
-                </div>
+                <!-- 右側區: 刊登家中空房 + 我的帳戶 下拉 -->
+                <ul class="navbar-nav ms-auto">
+                    <!-- 刊登家中空房按鈕 
+               在大螢幕於右側顯示，小螢幕時收合到列表(自動條列且可置中) -->
+                    <li class="nav-item my-2 my-lg-0 text-center">
+                        <button class="btn btn-outline-primary border-1 rounded-5 fw-bold" type="button">
+                            刊登家中空房
+                        </button>
+                    </li>
+
+                    <!-- 帳戶下拉示範 (大螢幕顯示在右上，小螢幕仍條列) -->
+                    <li class="nav-item dropdown text-center">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center justify-content-center gap-1 fw-bold"
+                            href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-circle-user"></i>
+                            我的帳戶
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end text-start" aria-labelledby="accountDropdown">
+                            <li><a class="dropdown-item" href="#">管理訂單</a></li>
+                            <li><a class="dropdown-item" href="#">住宿訊息</a></li>                            
+                            <li><a class="dropdown-item" href="#">住宿評鑑</a></li>
+                            <li>
+                                <hr class="dropdown-divider" />
+                            </li>
+                            <li><a class="dropdown-item" href="#">登出</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
