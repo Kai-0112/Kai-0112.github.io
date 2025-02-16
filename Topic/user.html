@@ -56,6 +56,21 @@
         .steps-container p {
             font-size: 16px;
         }
+
+        .step-number {
+            background-color: #24457c;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
     </style>
 </head>
 
@@ -210,21 +225,54 @@
     </div>
 
     <!-- How-to 區塊 -->
-    <section class="how-to-section bg-white py-5">
-        <div class="container text-center">
-            <h2 class="fs-2 fw-bold">如何套用優惠券/使用折扣碼</h2>
-            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/18f717aeec1c3a3d0b4af9a72b99a53e89d9f5340e3fc78fd80dd9bbc5077f1e?apiKey=f51b942ae4a64871869e7abf9a7ea73b&"
-                alt="How to apply coupon steps" class="img-fluid my-4">
-            <div class="steps-container d-flex flex-column flex-lg-row justify-content-center align-items-center gap-4">
-                <p class="mb-0 col-lg-3">
-                    搜尋並領取優惠券，如果上面標有折扣碼，別忘了先複製起來喔！
-                </p>
-                <p class="mb-0 col-lg-3">
-                    搜尋「適用優惠券」標籤的住宿，以使用優惠券。
-                </p>
-                <p class="mb-0 col-lg-3">
-                    確保在完成付款前套用優惠券/輸入折扣碼。
-                </p>
+    <section class="how-to-section bg-white py-2">
+        <div class="container my-3 how-to-apply-coupon">
+            <!-- 主標題，可視需要放置在 row 外或內部 -->
+            <div class="row">
+                <div class="col-12 mb-5">
+                    <h2 class="fw-bold text-black d-flex">如何套用優惠券 / 使用折扣碼</h2>
+                </div>
+            </div>
+
+            <!-- 內容區，三欄並列 -->
+            <div class="row gx-5 gy-4">
+                <!-- 第 1 欄 -->
+                <div class="col-md-4 d-flex flex-column align-items-center">
+                    <div class="circle-background d-flex align-items-center justify-content-center mb-3">
+                        <div class="coupon-card">
+                            <img loading="lazy" src="how-to.svg" class="divider-image" alt="" />
+                        </div>
+                    </div>
+                    <div class="step-number mt-2">1</div>
+                    <p class="text-center text-black mt-3">搜尋並領取優惠券，如果上面標有折扣碼，別忘了先複製起來喔！</p>
+                </div>
+
+                <!-- 第 2 欄 -->
+                <div class="col-md-4 d-flex flex-column align-items-center">
+                    <!-- 若需要在此欄再放主標題，可移到這裡：
+                <h2 class="fw-normal fs-1 text-black">如何套用優惠券 / 使用折扣碼</h2>
+                -->
+                    <div class="circle-background d-flex align-items-center justify-content-center mb-3">
+                        <div class="coupon-card">
+                            <img loading="lazy" src="how-to.svg" class="divider-image" alt="" />
+                        </div>
+                    </div>
+                    <div class="step-number mt-2">2</div>
+                    <p class="text-center text-black mt-3">搜尋「適用優惠券」標籤的住宿，以使用優惠券。</p>
+                </div>
+
+                <!-- 第 3 欄 -->
+                <div class="col-md-4 d-flex flex-column align-items-center">
+                    <div class="circle-background d-flex align-items-center justify-content-center mb-3">
+                        <div class="coupon-card">
+                            <div class="px-3">
+                            </div>
+                            <img loading="lazy" src="how-to.svg" class="divider-image" alt="" />
+                        </div>
+                    </div>
+                    <div class="step-number mt-2">3</div>
+                    <p class="text-center text-black mt-3">確保在完成付款前套用優惠券 / 輸入折扣碼。</p>
+                </div>
             </div>
         </div>
     </section>
